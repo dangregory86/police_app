@@ -26,7 +26,7 @@ class _MyMapAreaState extends State<MyMapArea> {
     zoom: 14.4746,
   );
 
-  bool pointAbsorb = false;
+  bool selectingInfo = false;
   String polForce = constant.placeholder;
   String message = constant.selectString;
   String details = "";
@@ -55,8 +55,12 @@ class _MyMapAreaState extends State<MyMapArea> {
             maxWidth: double.infinity,
           ),
           child: GoogleMap(
-            myLocationButtonEnabled: true,
-            onTap: (latLng) => getPolice(latLng),
+            onTap: (latLng) {
+              if (selectingInfo) {
+                return;
+              }
+              getPolice(latLng);
+            },
             initialCameraPosition: CameraPosition(
               target: LatLng(
                 53.20603382558906,
@@ -95,19 +99,32 @@ class _MyMapAreaState extends State<MyMapArea> {
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
                     Container(
-                      child: BackdropFilter(
-                        filter: ImageFilter.blur(sigmaX: 10, sigmaY: 10),
-                        child: Dialog(
-                          shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(15),
+                      padding: EdgeInsets.all(0),
+                      child: TextButton(
+                        onPressed: () {
+                          setState(() {
+                            selectingInfo = true;
+                          });
+                          _showMenuDialog(context);
+                        },
+                        child: Container(
+                          padding: EdgeInsets.symmetric(
+                            horizontal: 10,
                           ),
-                          backgroundColor: Colors.amber,
-                          child: DropdownSelection(),
+                          width: MediaQuery.of(context).size.width * 0.3,
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: [
+                              Text(dropdownValue),
+                              Icon(Icons.arrow_drop_down_circle_rounded),
+                            ],
+                          ),
                         ),
                       ),
                     ),
                     Container(
                       child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.end,
                         children: [
                           SelectableHtml(data: details),
                         ],
@@ -126,31 +143,42 @@ class _MyMapAreaState extends State<MyMapArea> {
     );
   }
 
-  DropdownButton<String> DropdownSelection() {
-    return DropdownButton<String>(
-      value: dropdownValue,
-      icon: const Icon(Icons.arrow_circle_down_rounded),
-      isDense: true,
-      iconSize: 24,
-      elevation: 16,
-      style: const TextStyle(color: Colors.deepPurple),
-      underline: Container(
-        height: 2,
-        color: Colors.deepPurpleAccent,
-      ),
-      onChanged: (String? newValue) {
-        setState(() {
-          dropdownValue = newValue!;
-          details = setDetails(newValue);
-          // pointAbsorb = false;
-        });
-      },
-      items: constant.choices.map((String value) {
-        return DropdownMenuItem<String>(
-          value: value,
-          child: Text(value),
+//Function to select which police information to show on the front page.
+  void _showMenuDialog(context) {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: Text('Select information to show.'),
+          content: Container(
+            height: MediaQuery.of(context).size.height * 0.6,
+            child: Column(
+              children: [
+                for (var choice in constant.choices)
+                  InkWell(
+                    child: Text(choice),
+                    onTapCancel: () {
+                      setState(() {
+                        selectingInfo = false;
+                      });
+                    },
+                    onTap: () {
+                      setState(() {
+                        dropdownValue = choice;
+                        details = setDetails(choice);
+                        Navigator.pop(context);
+                        Timer(Duration(seconds: 1), () {
+                          selectingInfo = false;
+                        });
+                      });
+                    },
+                  ),
+              ],
+              mainAxisAlignment: MainAxisAlignment.spaceAround,
+            ),
+          ),
         );
-      }).toList(),
+      },
     );
   }
 
