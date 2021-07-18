@@ -8,3 +8,16 @@ const String noDetails = 'Not listed';
 // json keys
 const String pf = 'force';
 const String area = 'neighbourhood';
+
+//dropdown selections
+const List<String> choices = [
+  'Website',
+  'Email-Address',
+  'Phone-number',
+  'Facebook',
+  'Twitter',
+  'Neighbourhood',
+  'Location',
+  'Address',
+  'Description'
+];

@@ -5,9 +5,8 @@ import 'package:html/parser.dart';
 
 class PoliceDetailsCard extends StatelessWidget {
   PoliceDetailsCard({
-    Key key,
-    @required this.polForce,
-  }) : super(key: key);
+    required this.polForce,
+  });
 
   final PoliceForce polForce;
 
@@ -93,7 +92,7 @@ class PoliceDetailsCard extends StatelessWidget {
 class detailsRow extends StatelessWidget {
   final String title;
   final String detail;
-  const detailsRow({this.title, this.detail});
+  const detailsRow({required this.title, required this.detail});
 
   @override
   Widget build(BuildContext context) {
@@ -107,9 +106,14 @@ class detailsRow extends StatelessWidget {
             Text(
               title,
             ),
-            Text(
-              parseHtml(
-                detail,
+            Container(
+              width: MediaQuery.of(context).size.width * 0.5,
+              child: Column(
+                children: [
+                  SelectableHtml(
+                    data: detail,
+                  ),
+                ],
               ),
             ),
           ],
@@ -120,7 +124,8 @@ class detailsRow extends StatelessWidget {
 
   String parseHtml(String s) {
     final document = parse(s);
-    final String parsedString = parse(document.body.text).documentElement.text;
+    final String parsedString =
+        parse(document.body!.text).documentElement!.text;
 
     return parsedString;
   }

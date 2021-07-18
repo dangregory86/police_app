@@ -1,4 +1,4 @@
-import '../constants.dart';
+import '../constants.dart' as constant;
 
 class PoliceForce {
   String force;
@@ -14,17 +14,17 @@ class PoliceForce {
   String locationTel;
   String description;
   PoliceForce({
-    this.force = 'No details given.',
-    this.website = 'No details given.',
-    this.contactEmail = 'No details given.',
-    this.contactPhone = 'No details given.',
-    this.contactFb = 'No details given.',
-    this.contactTwitter = 'No details given.',
-    this.neighbourhoodName = 'No details given.',
-    this.locationName = 'No details given.',
-    this.locationAddress = 'No details given.',
-    this.locationPostcode = 'No details given.',
-    this.locationTel = 'No details given.',
-    this.description = 'No details given.',
+    this.force = constant.noDetails,
+    this.website = constant.noDetails,
+    this.contactEmail = constant.noDetails,
+    this.contactPhone = constant.noDetails,
+    this.contactFb = constant.noDetails,
+    this.contactTwitter = constant.noDetails,
+    this.neighbourhoodName = constant.noDetails,
+    this.locationName = constant.noDetails,
+    this.locationAddress = constant.noDetails,
+    this.locationPostcode = constant.noDetails,
+    this.locationTel = constant.noDetails,
+    this.description = constant.noDetails,
   });
 }
